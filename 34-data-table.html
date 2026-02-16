@@ -29,8 +29,25 @@
             overflow-x: hidden;
         }
 
+        thead tr {
+            background-color: rgb(135, 209, 255);
+            color: rgb(0, 41, 82);
+        }
+
+        tbody tr {
+            color: rgb(0, 49, 99);
+        }
+
+        tbody tr:nth-child(2n) {
+            background-color: rgb(215, 238, 255);
+        }
+
+        tbody tr:nth-child(2n+1) {
+            background-color: rgb(247, 252, 255);
+        }
+
         .pagination-btns {
-            height: 50px;
+            height: 160px;
             display: flex;
             align-items: center;
             justify-content: space-around;
@@ -39,6 +56,21 @@
         .pagination-btns button {
             padding: 0.5rem 1rem;
             font-size: 1.2rem;
+            background-color: rgb(0, 49, 99);
+            color: rgb(135, 209, 255);
+            border: 1px solid rgb(135, 209, 255);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .pagination-btns button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .pagination-btns button:hover {
+            background-color: rgb(0, 26, 53);
         }
     </style>
 </head>
@@ -78,6 +110,7 @@
             paginationState.start = paginationState.start - 10;
             paginationState.end = paginationState.end - 10;
             updatePaginationBtnsState();
+            addBooksRowsIntoTable();
         });
 
         nextBtn.addEventListener('click', () => {
@@ -85,6 +118,9 @@
                 return;
             }
             paginationState.start = paginationState.start + 10;
+            paginationState.end = paginationState.end + 10;
+            updatePaginationBtnsState();
+            addBooksRowsIntoTable();
         });
 
         function updatePaginationBtnsState() {
@@ -112,9 +148,10 @@
         }
 
         function addBooksRowsIntoTable() {
-            books.forEach(book => {
+            document.getElementById('books-table-body').innerHTML = '';
+            for (let i = paginationState.start; i <= paginationState.end; i++) {
                 const bookRowTr = document.createElement('tr');
-                const bookDetails = mapEachDetailWithColumn(book);
+                const bookDetails = mapEachDetailWithColumn(books[i]);
                 bookDetails.forEach((detail) => {
                     const bookDetailTd = document.createElement('td');
                     if (detail.column === 'publishedDate' && detail.value) {
@@ -143,7 +180,7 @@
                     bookRowTr.appendChild(bookDetailTd);
                 });
                 document.getElementById('books-table-body').appendChild(bookRowTr);
-            });
+            }
         }
 
         function mapEachDetailWithColumn(book) {
