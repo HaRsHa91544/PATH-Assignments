@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Table</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        .wrapper {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            padding: 1rem;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            width: 100px;
+            max-width: 200px;
+            overflow-x: hidden;
+        }
+
+        .pagination-btns {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .pagination-btns button {
+            padding: 0.5rem 1rem;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <table id="books-table" border="1">
+            <thead>
+                <tr id="table-header-row">
+
+                </tr>
+            </thead>
+            <tbody id="books-table-body">
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination-btns">
+        <button id="prev-btn">&#11013;</button>
+        <button id="next-btn">&#10145;</button>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        const eachBookColumns = Object.keys(books[0]);
+        const tableDisplayedColumns = ['Title', 'ISBN', 'Page Count', 'Published Date', 'Thumbnail URL', 'Short Description', 'Long Description', 'Status', 'Authors', 'Categories', 'Price', 'Discount'];
+        const paginationState = { start: 0, end: 9 };
+
+        prevBtn.addEventListener('click', () => {
+            if (paginationState.start === 0) {
+                return;
+            }
+            paginationState.start = paginationState.start - 10;
+            paginationState.end = paginationState.end - 10;
+            updatePaginationBtnsState();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (paginationState.end >= books.length) {
+                return;
+            }
+            paginationState.start = paginationState.start + 10;
+        });
+
+        function updatePaginationBtnsState() {
+            if (paginationState.start === 0) {
+                prevBtn.disabled = true;
+            }
+            else if (paginationState.end >= books.length) {
+                nextBtn.disabled = true;
+            }
+            else {
+                prevBtn.disabled = false;
+                nextBtn.disabled = false;
+            }
+        }
+
+        function createBookColumns() {
+            tableDisplayedColumns.forEach((column) => {
+                if (column === 'Discount Units' || column === 'Currency') {
+                    return;
+                }
+                const columnTh = document.createElement('th');
+                columnTh.innerText = column;
+                document.getElementById('table-header-row').appendChild(columnTh);
+            });
+        }
+
+        function addBooksRowsIntoTable() {
+            books.forEach(book => {
+                const bookRowTr = document.createElement('tr');
+                const bookDetails = mapEachDetailWithColumn(book);
+                bookDetails.forEach((detail) => {
+                    const bookDetailTd = document.createElement('td');
+                    if (detail.column === 'publishedDate' && detail.value) {
+                        let publishedDate = new Date(detail.value["$date"]);
+                        bookDetailTd.innerText = `${publishedDate.getDate()}/${publishedDate.getMonth() + 1}/${publishedDate.getFullYear()}`;
+                    }
+                    else if (detail.column === 'thumbnailUrl') {
+                        bookDetailTd.innerHTML = `<a href="${detail.value}" target="_blank">Click to View</a>`;
+                    }
+                    else if (detail.column === 'longDescription' || detail.column === 'shortDescription' || detail.column === 'authors') {
+                        bookDetailTd.title = detail.value;
+                        bookDetailTd.innerText = detail.value;
+                    }
+                    else if (detail.column === 'currency' || detail.column === 'discountUnits') {
+                        return;
+                    }
+                    else if (detail.column === 'price') {
+                        bookDetailTd.innerText = `$${detail.value}`;
+                    }
+                    else if (detail.column === 'discount') {
+                        bookDetailTd.innerText = `${detail.value}%`;
+                    }
+                    else {
+                        bookDetailTd.innerText = detail.value;
+                    }
+                    bookRowTr.appendChild(bookDetailTd);
+                });
+                document.getElementById('books-table-body').appendChild(bookRowTr);
+            });
+        }
+
+        function mapEachDetailWithColumn(book) {
+            let bookColumns = Object.keys(book);
+            let bookValues = Object.values(book);
+            let bookDetailsMappedArray = [];
+
+            eachBookColumns.forEach((column) => {
+                let indexOfColumn = bookColumns.indexOf(column);
+                if (indexOfColumn != -1) {
+                    bookDetailsMappedArray.push({ column, value: bookValues[indexOfColumn] });
+                }
+                else {
+                    bookDetailsMappedArray.push({ column, value: '' });
+                }
+            });
+
+            return bookDetailsMappedArray;
+        }
+
+        updatePaginationBtnsState();
+        createBookColumns();
+        addBooksRowsIntoTable();
+    </script>
+</body>
+
+</html>
