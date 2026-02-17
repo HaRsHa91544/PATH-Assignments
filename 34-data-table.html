@@ -4,15 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <title>Data Table</title>
     <style>
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
 
+        h1 {
+            color: rgb(0, 41, 82);
+            text-align: center;
+        }
+
         .wrapper {
             max-width: 100%;
             overflow-x: auto;
+            scrollbar-width: thin;
         }
 
         table {
@@ -29,9 +36,32 @@
             overflow-x: hidden;
         }
 
+        th {
+            transition: all 0.3s ease-in-out;
+        }
+
+        th:hover:nth-of-type(1),
+        th:hover:nth-of-type(2),
+        th:hover:nth-of-type(3),
+        th:hover:nth-of-type(4),
+        th:hover:nth-of-type(6),
+        th:hover:nth-of-type(7),
+        th:hover:nth-of-type(9),
+        th:hover:nth-of-type(10),
+        th:hover:nth-of-type(11),
+        th:hover:nth-of-type(12) {
+            backdrop-filter: contrast(0.9);
+            cursor: pointer;
+        }
+
         thead tr {
             background-color: rgb(135, 209, 255);
             color: rgb(0, 41, 82);
+        }
+
+        .bi.bi-sort-alpha-down-alt,
+        .bi.bi-sort-alpha-down {
+            display: none;
         }
 
         tbody tr {
@@ -47,7 +77,7 @@
         }
 
         .pagination-btns {
-            height: 160px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: space-around;
@@ -65,17 +95,43 @@
         }
 
         .pagination-btns button:disabled {
-            opacity: 0.7;
+            opacity: 0.5;
             cursor: not-allowed;
         }
 
         .pagination-btns button:hover {
             background-color: rgb(0, 26, 53);
         }
+
+        .search-container {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 1rem;
+        }
+
+        .search-container input {
+            padding: 0.75rem 1.25rem 0.75rem 0.5rem;
+            outline: 3px solid transparent;
+            transition: all 0.3s ease-in-out;
+            border: 1px solid rgb(0, 49, 99);
+            border-radius: 8px;
+            color: rgb(0, 49, 99);
+        }
+
+        .search-container input:focus {
+            outline: 3px solid rgb(189, 226, 255);
+        }
     </style>
 </head>
 
 <body>
+    <h1>Data Table with Sort, Pagination and Search Features.</h1>
+    <div class="search-container">
+        <input type="text" placeholder="Search" id="search-input">
+    </div>
+
     <div class="wrapper">
         <table id="books-table" border="1">
             <thead>
@@ -98,10 +154,16 @@
     <script>
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
+        const searchInput = document.getElementById('search-input');
 
         const eachBookColumns = Object.keys(books[0]);
-        const tableDisplayedColumns = ['Title', 'ISBN', 'Page Count', 'Published Date', 'Thumbnail URL', 'Short Description', 'Long Description', 'Status', 'Authors', 'Categories', 'Price', 'Discount'];
+
+        const tableDisplayedColumns = ['Title', 'ISBN', 'Page Count', 'Published Date', 'Thumbnail URL',
+            'Short Description', 'Long Description', 'Status', 'Authors', 'Categories', 'Price', 'Currency', 'Discount', 'Discount Units'];
+
         const paginationState = { start: 0, end: 9 };
+
+        const columnSortState = { title: 'asc', isbn: 'asc', pageCount: 'asc', publishedDate: 'asc', shortDescription: 'asc', longDescription: 'asc', authors: 'asc', categories: 'asc', price: 'asc', discount: 'asc' };
 
         prevBtn.addEventListener('click', () => {
             if (paginationState.start === 0) {
@@ -110,7 +172,7 @@
             paginationState.start = paginationState.start - 10;
             paginationState.end = paginationState.end - 10;
             updatePaginationBtnsState();
-            addBooksRowsIntoTable();
+            addBooksRowsIntoTable(books.slice(paginationState.start, paginationState.end + 1));
         });
 
         nextBtn.addEventListener('click', () => {
@@ -120,7 +182,23 @@
             paginationState.start = paginationState.start + 10;
             paginationState.end = paginationState.end + 10;
             updatePaginationBtnsState();
-            addBooksRowsIntoTable();
+            addBooksRowsIntoTable(books.slice(paginationState.start, paginationState.end + 1));
+        });
+
+        searchInput.addEventListener('input', () => {
+            let searchInputValue = searchInput.value.toLocaleLowerCase();
+            let searchedBooks = [];
+            if (searchInputValue.length < 1) {
+                addBooksRowsIntoTable(books.slice(paginationState.start, paginationState.end + 1));
+                return;
+            }
+            books.forEach((book) => {
+                let bookTitle = String(book.title).toLocaleLowerCase();
+                if (bookTitle.includes(searchInputValue)) {
+                    searchedBooks.push(book);
+                }
+            });
+            addBooksRowsIntoTable(searchedBooks);
         });
 
         function updatePaginationBtnsState() {
@@ -137,21 +215,51 @@
         }
 
         function createBookColumns() {
-            tableDisplayedColumns.forEach((column) => {
+            tableDisplayedColumns.forEach((column, index) => {
                 if (column === 'Discount Units' || column === 'Currency') {
                     return;
                 }
                 const columnTh = document.createElement('th');
                 columnTh.innerText = column;
                 document.getElementById('table-header-row').appendChild(columnTh);
+                if (column === 'Thumbnail URL' || column === 'Status') {
+                    return;
+                }
+                columnTh.innerHTML += `
+                <i class="bi bi-sort-alpha-down"></i>
+                <i class="bi bi-sort-alpha-down-alt"></i>
+                `;
+                columnTh.addEventListener('click', () => {
+                    document.querySelector('.bi.bi-sort-alpha-down').style.display = 'none';
+                    document.querySelector('.bi.bi-sort-alpha-down-alt').style.display = 'none';
+
+                    document.querySelectorAll('.bi.bi-sort-alpha-down').forEach(element => {
+                        element.style.display = 'none';
+                    });
+
+                    document.querySelectorAll('.bi.bi-sort-alpha-down-alt').forEach(element => {
+                        element.style.display = 'none';
+                    });
+
+                    if (columnSortState[eachBookColumns[index]] === 'asc') {
+                        columnTh.querySelector('.bi.bi-sort-alpha-down').style.display = 'inline';
+                        columnTh.querySelector('.bi.bi-sort-alpha-down-alt').style.display = 'none';
+                    }
+                    else {
+                        columnTh.querySelector('.bi.bi-sort-alpha-down').style.display = 'none';
+                        columnTh.querySelector('.bi.bi-sort-alpha-down-alt').style.display = 'inline';
+                    }
+                    sortRowsBasedOnColumn(books.slice(paginationState.start, paginationState.end + 1), eachBookColumns[index]);
+                });
             });
         }
 
-        function addBooksRowsIntoTable() {
+        function addBooksRowsIntoTable(books) {
             document.getElementById('books-table-body').innerHTML = '';
-            for (let i = paginationState.start; i <= paginationState.end; i++) {
+
+            books.forEach((book) => {
                 const bookRowTr = document.createElement('tr');
-                const bookDetails = mapEachDetailWithColumn(books[i]);
+                const bookDetails = mapEachDetailWithColumn(book);
                 bookDetails.forEach((detail) => {
                     const bookDetailTd = document.createElement('td');
                     if (detail.column === 'publishedDate' && detail.value) {
@@ -159,7 +267,7 @@
                         bookDetailTd.innerText = `${publishedDate.getDate()}/${publishedDate.getMonth() + 1}/${publishedDate.getFullYear()}`;
                     }
                     else if (detail.column === 'thumbnailUrl') {
-                        bookDetailTd.innerHTML = `<a href="${detail.value}" target="_blank">Click to View</a>`;
+                        bookDetailTd.innerHTML = `<a href='${detail.value}' target="_blank">Click to View</a>`;
                     }
                     else if (detail.column === 'longDescription' || detail.column === 'shortDescription' || detail.column === 'authors') {
                         bookDetailTd.title = detail.value;
@@ -180,8 +288,9 @@
                     bookRowTr.appendChild(bookDetailTd);
                 });
                 document.getElementById('books-table-body').appendChild(bookRowTr);
-            }
+            });
         }
+
 
         function mapEachDetailWithColumn(book) {
             let bookColumns = Object.keys(book);
@@ -201,9 +310,63 @@
             return bookDetailsMappedArray;
         }
 
+        function sortRowsBasedOnColumn(books, columnName) {
+            let sortedBooks = [];
+
+            let returnValue1, returnValue2;
+
+            if (columnSortState[columnName] === 'asc') {
+                returnValue1 = 1;
+                returnValue2 = -1;
+                columnSortState[columnName] = 'desc';
+            } else {
+                returnValue1 = -1;
+                returnValue2 = 1;
+                columnSortState[columnName] = 'asc';
+            }
+
+            if (columnName === 'pageCount' || columnName === 'isbn' || columnName === 'price' || columnName === 'discount') {
+                sortedBooks = books.toSorted((a, b) => {
+                    if (a[columnName] > b[columnName]) {
+                        return returnValue1;
+                    }
+                    else {
+                        return returnValue2;
+                    }
+                });
+            }
+
+            else if (columnName === 'publishedDate') {
+                sortedBooks = books.toSorted((a, b) => {
+                    let dateA = a[columnName].$date;
+                    let dateB = b[columnName].$date;
+
+                    if (dateA > dateB) {
+                        return returnValue1;
+                    }
+                    else {
+                        return returnValue2;
+                    }
+                });
+            }
+
+            else {
+                sortedBooks = books.toSorted((a, b) => {
+                    if (a[columnName]?.toString().toLocaleLowerCase() > b[columnName]?.toString().toLocaleLowerCase()) {
+                        return returnValue1;
+                    }
+                    else {
+                        return returnValue2;
+                    }
+                });
+            }
+
+            addBooksRowsIntoTable(sortedBooks);
+        }
+
         updatePaginationBtnsState();
         createBookColumns();
-        addBooksRowsIntoTable();
+        addBooksRowsIntoTable(books.slice(paginationState.start, paginationState.end + 1));
     </script>
 </body>
 
