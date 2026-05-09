@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List - JSON DB</title>
+    <!-- Features -->
+    <!-- 1. ADD, View, Delete and Mark as Completed -->
+    <!-- 2. Edit a Todo, Keyboard Support -->
+    <!-- 3. Filter Todos: All, Completed, Pending -->
+    <!-- 4. Delete Completed ones -->
+    <!-- 5. Search Todo, Todo Count -->
+</head>
+
+<body>
+    <h1>Todo List Stored in JSON dB</h1>
+    <div class="todos-input-container">
+        <input type="text" name="task" class="task-input" placeholder="Enter the Task">
+        <button class="add-task-btn">Add Task</button>
+    </div>
+    <ul class="todos-container">
+
+    </ul>
+    <script>
+        const taskInput = document.querySelector('.task-input');
+        const todosContainer = document.querySelector('.todos-container');
+        const addTaskBtn = document.querySelector('.add-task-btn');
+
+        addTaskBtn.addEventListener('click', addTaskToTodos);
+
+        function addTaskToTodos() {
+            let newTask = taskInput.value;
+            if (!newTask.trim()) return;
+
+            fetch('http://localhost:3000/todos', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    task: newTask,
+                    isCompleted: false
+                })
+            }).then(renderTodos);
+        }
+
+        function renderTodos() {
+            fetch('http://localhost:3000/todos').then(res => {
+                return res.json();
+            }).then(data => {
+                console.log(data);
+            });
+        }
+    </script>
+</body>
+
+</html>

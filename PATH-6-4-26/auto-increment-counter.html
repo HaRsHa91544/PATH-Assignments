@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Increment Counter</title>
+</head>
+
+<body>
+    <h1>Auto Increment Counter</h1>
+    <h2>Count: <span class="counter-value">0</span></h2>
+    <button class="increment-btn">Increment Count</button>
+    <script>
+        const incrementBtn = document.querySelector('.increment-btn');
+        const counterValueSpan = document.querySelector('.counter-value');
+
+        let count = 0;
+
+        incrementBtn.addEventListener('click', incrementCount);
+
+        function stopIncrement() {
+            
+        }
+
+        function incrementCount() {
+            counterValueSpan.textContent = ++count;
+        }
+
+        setInterval(incrementCount, 2000);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harsha Vardhan's Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet">
+    <style>
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: rgb(200, 0, 0) white;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Google Sans Flex', Arial;
+        }
+
+        section {
+            background: linear-gradient(135deg, white 80%, rgb(200, 0, 0, 0.2));
+            padding: clamp(3rem, 6vw, 6rem) clamp(1rem, 4vw, 3rem);
+            border-bottom: 1px solid rgb(200, 0, 0, 0.5);
+        }
+
+        .hero-section {
+            display: flex;
+            flex-flow: wrap;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .hero-content {
+            flex: 2;
+            gap: 2rem;
+            display: flex;
+            flex-flow: column wrap;
+        }
+
+        .hero-content>* {
+            flex: 1;
+        }
+
+        .hero-heading {
+            font-size: clamp(1.8rem, 5vw, 5rem);
+            font-weight: 600;
+            color: rgb(200, 0, 0);
+            margin: 0;
+        }
+
+        .hero-description {
+            margin: 0;
+            font-size: clamp(0.9rem, 1.4vw, 1.3rem);
+            line-height: 1.4;
+        }
+
+        .hero-profile-photo {
+            flex: 1;
+            max-width: 240px;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid white;
+            outline: 5px solid rgb(200, 0, 0);
+            box-shadow: 0px 0px 15px rgb(200, 0, 0);
+        }
+
+        .my-profile-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .my-works {
+            display: flex;
+            flex-flow: column wrap;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .my-works>* {
+            flex: 1;
+        }
+
+        .my-works-table-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .my-works-table {
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .my-works-table td,
+        .my-works-table th {
+            padding: 1rem;
+            font-size: clamp(0.9rem, 1.8vw, 1.5rem);
+        }
+
+        .my-works-table td {
+            font-size: clamp(0.7rem, 1.4vw, 1.3rem);
+        }
+
+        .my-works-table td a {
+            color: rgb(200, 0, 0);
+        }
+
+        .my-works-table td a:visited {
+            color: rgb(150, 0, 0);
+        }
+
+        @media screen and (max-width:768px) {
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-content {
+                flex: 1;
+            }
+
+            .hero-heading {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-heading"> 🙇 I'm Harsha Vardhan.</h1>
+            <p class="hero-description">Hey! I'm Learning Web Development from Scratch to Build a Strong Foundation.
+                Today is Day 1 in the Process.</p>
+        </div>
+        <div class="hero-profile-photo">
+            <img src="profile.jpg" alt="" class="my-profile-photo">
+        </div>
+    </section>
+    <section class="my-works">
+        <div class="my-works-heading">
+            <h1 class="hero-heading">My Fundamental Works before Day 1!</h1>
+        </div>
+        <div class="my-works-table-wrapper">
+            <table border="1" class="my-works-table">
+                <thead>
+                    <tr>
+                        <th>Title of the Work</th>
+                        <th>Source Code Link</th>
+                        <th>Live Work Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Simple Counter</td>
+                        <td><a href="https://github.com/HaRsHa91544/Assignments/blob/main/17-counter.html"
+                                target="_blank">Here is the
+                                Code</a></td>
+                        <td><a href="https://harsha91544.github.io/Assignments/17-counter.html" target="_blank">Here is
+                                the Output</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Simple Image Gallery</td>
+                        <td><a href="https://github.com/HaRsHa91544/Assignments/blob/main/18-Gallery.html"
+                                target="_blank">Here is the
+                                Code</a></td>
+                        <td><a href="https://harsha91544.github.io/Assignments/18-Gallery.html" target="_blank">Here is
+                                the Output</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Simple Todo List</td>
+                        <td><a href="https://github.com/HaRsHa91544/Assignments/blob/main/19-todo-list.html"
+                                target="_blank">Here is the
+                                Code</a></td>
+                        <td><a href="https://harsha91544.github.io/Assignments/19-todo-list.html" target="_blank">Here
+                                is the Output</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Simple Stop Watch</td>
+                        <td><a href="https://github.com/HaRsHa91544/Assignments/blob/main/24-stop-watch.html"
+                                target="_blank">Here is
+                                the Code</a></td>
+                        <td><a href="https://harsha91544.github.io/Assignments/24-stop-watch.html" target="_blank">Here
+                                is the
+                                Output</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Email Design</td>
+                        <td><a href="https://github.com/HaRsHa91544/Assignments/blob/main/27-email.html"
+                                target="_blank">Here is the
+                                Code</a></td>
+                        <td><a href="https://harsha91544.github.io/Assignments/27-email.html" target="_blank">Here is
+                                the Output</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Simple Cart with Products</td>
+                        <td><a href="https://github.com/HaRsHa91544/Assignments/blob/main/26-cart.html"
+                                target="_blank">Here is the
+                                Code</a>
+                        </td>
+                        <td><a href="https://harsha91544.github.io/Assignments/26-cart.html" target="_blank">Here is the
+                                Output</a></td>
+                    </tr>
+                    <tr>
+                        <td>Real Estate Landing Page</td>
+                        <td><a href="https://github.com/HaRsHa91544/Assignments/blob/main/32-real-estate-webpage.html"
+                                target="_blank">Here
+                                is the Code</a></td>
+                        <td><a href="https://harsha91544.github.io/Assignments/32-real-estate-webpage.html"
+                                target="_blank">Here is the
+                                Output</a></td>
+                    </tr>
+                    <tr>
+                        <td>Data Table</td>
+                        <td><a href="https://github.com/HaRsHa91544/Assignments/blob/main/34-data-table.html"
+                                target="_blank">Here is
+                                the Code</a></td>
+                        <td><a href="https://harsha91544.github.io/Assignments/34-data-table.html" target="_blank">Here
+                                is the
+                                Output</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</body>
+
+</html>

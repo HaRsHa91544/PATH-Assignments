@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Persistent Todo List</h1>
+    <input type="text" placeholder="Enter the Task to do" id="task-input">
+    <button id="add-task-btn">Add Task</button>
+    <ul id="todo-list-ul">
+
+    </ul>
+    <script>
+        const todoListUl = document.getElementById('todo-list-ul');
+        const todoInput = document.getElementById('task-input');
+        const addNewTaskBtn = document.getElementById('add-task-btn');
+        addNewTaskBtn.addEventListener('click', addTasktoTodos);
+
+        let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+        function addTasktoTodos() {
+            let newTask = todoInput.value.trim();
+            if (!newTask) {
+                return;
+            }
+            todos.push({ task: newTask, isCompleted: false });
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodoList();
+            todoInput.value = '';
+        }
+
+        function renderTodoList() {
+            todoListUl.innerHTML = '';
+            todos.forEach((todo, index) => {
+                const todoItemLi = document.createElement('li');
+
+                const todoItemCheckbox = document.createElement('input');
+                todoItemCheckbox.type = 'checkbox';
+
+                const todoSpan = document.createElement('span');
+                todoSpan.innerText = todo.task;
+
+                if (todo.isCompleted) {
+                    todoSpan.style.textDecoration = 'line-through';
+                    todoItemCheckbox.checked = true;
+                }
+
+                todoItemCheckbox.addEventListener('change', () => {
+                    if (todo.isCompleted) {
+                        todoSpan.style.textDecoration = 'none';
+                        todo.isCompleted = false;
+                    }
+                    else {
+                        todoSpan.style.textDecoration = 'line-through';
+                        todo.isCompleted = true;
+                    }
+                    localStorage.setItem('todos', JSON.stringify(todos));
+                });
+
+                const todoItemButton = document.createElement('button');
+                todoItemButton.innerText = 'Delete';
+                todoItemButton.addEventListener('click', () => {
+                    todos.splice(index, 1);
+                    localStorage.setItem('todos', JSON.stringify(todos));
+                    renderTodoList();
+                });
+
+                todoItemLi.appendChild(todoItemCheckbox);
+                todoItemLi.appendChild(todoSpan);
+                todoItemLi.appendChild(todoItemButton);
+                todoListUl.appendChild(todoItemLi);
+            });
+        }
+
+        renderTodoList();
+    </script>
+</body>
+
+</html>

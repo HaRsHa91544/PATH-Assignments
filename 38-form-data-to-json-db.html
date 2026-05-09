@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>ThoughtWorks Visitor Form</h1>
+    <form method="post" id="visitor-form">
+        <input type="text" name="name" placeholder="Your Name"><br><br>
+        <input type="email" name="email" placeholder="Your Email"><br><br>
+        <input type="number" name="phone" placeholder="Phone Number"><br><br>
+        <input type="text" name="organisation" placeholder="Your Organisation"><br><br>
+        <input type="date" name="date" placeholder="Date"><br><br>
+        <input type="text" name="host" placeholder="Name of the Host"><br><br>
+        <button id="submit-btn" type="submit">Add</button>
+    </form>
+    <script>
+        const visitorForm = document.getElementById('visitor-form');
+        visitorForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            fetch('http://localhost:3000/visitors', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: document.getElementsByName('name')[0].value,
+                    email: document.getElementsByName('email')[0].value,
+                    phone: document.getElementsByName('phone')[0].value,
+                    organisation: document.getElementsByName('organisation')[0].value,
+                    date: document.getElementsByName('date')[0].value,
+                    host: document.getElementsByName('host')[0].value,
+                })
+            }).then((res) => {
+                return res.json();
+            }).then((data) => {
+                console.log(data);
+            });
+        });
+    </script>
+</body>
+
+</html>

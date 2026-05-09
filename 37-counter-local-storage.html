@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1 id="counter-h1"></h1>
+    <button onclick="incrementCounter()">Increment</button>
+    <button onclick="decrementCounter()">Decrement</button>
+    <script>
+        const counterH1 = document.getElementById('counter-h1');
+        let counter = Number(localStorage.getItem('count')) || 0;
+        counterH1.innerText = counter;
+
+        function incrementCounter() {
+            counter++;
+            counterH1.innerText = counter;
+            localStorage.setItem('count', counter);
+        }
+        function decrementCounter() {
+            counter--;
+            counterH1.innerText = counter;
+            localStorage.setItem('count', counter);
+        }
+    </script>
+</body>
+
+</html>
